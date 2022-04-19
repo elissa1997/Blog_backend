@@ -14,4 +14,6 @@ module.exports = app => {
   router.get('/article/list', controller.article.getList);
   router.get('/article/detail', controller.article.getDetail);
 
+  router.get('/comment/listbyarticle', controller.comment.getListByArticle);
+
 };

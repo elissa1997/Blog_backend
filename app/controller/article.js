@@ -11,7 +11,7 @@ class ArticleController extends Controller {
     try {
       let get_data = ctx.query;
       let filter = {};
-      console.log(get_data);
+      // console.log(get_data);
       let page = { 
         offset: Number(get_data.offset), 
         limits: Number(get_data.limits) 
