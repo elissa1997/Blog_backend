@@ -30,6 +30,33 @@ class CommentController extends Controller {
       }
     }
   }
+
+  async addComment() {
+    const { ctx } = this;
+    try {
+      let post_data = ctx.request.body;
+      post_data.ip = ctx.request.ip;
+      let res = await ctx.service.comment.addComment(post_data);
+      if (res) {
+        ctx.body = {
+          msg: 'Add successfully',
+          data: res,
+          status: 200
+        }
+      }else {
+        ctx.body = {
+          msg: 'Add failed',
+          status: 402
+        }
+      }
+    }catch (e) {
+      // console.log(e);
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
+    }
+  }
 }
 
 module.exports = CommentController;

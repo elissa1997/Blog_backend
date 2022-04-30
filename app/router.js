@@ -15,5 +15,6 @@ module.exports = app => {
   router.get('/article/detail', controller.article.getDetail);
 
   router.get('/comment/listbyarticle', controller.comment.getListByArticle);
+  router.post('/comment/add', controller.comment.addComment);
 
 };

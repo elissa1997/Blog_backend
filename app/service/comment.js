@@ -11,6 +11,7 @@ class CommentService extends Service {
           a_id: a_id
         },
         order: [
+          ['parent_id', 'ASC'],
           ['created_at', 'DESC']
         ]
       })
@@ -21,6 +22,29 @@ class CommentService extends Service {
     } catch (e) {
       console.log(e)
       return null;
+    }
+  }
+
+  async addComment(data) {
+    let { app } = this;
+    let { aId, parentId, userName, email, url, ip, agent, text } = data;
+    // console.log(data);
+    // let newComment;
+    try {
+      await app.model.Comment.create({
+        aId,
+        parentId,
+        userName,
+        email,
+        url,
+        ip,
+        agent,
+        text
+      });
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
     }
   }
 }
