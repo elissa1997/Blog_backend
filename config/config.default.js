@@ -21,15 +21,7 @@ module.exports = appInfo => {
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
   }
   // 数据库配置
-  config.sequelize = {
-    dialect: 'mysql',
-    database: 'blog',
-    host: '127.0.0.1',
-    port: '3306',
-    username: 'root',
-    password: 'liuxingyu',
-    timezone: '+08:00'
-  }
+  // 见本地/线上环境配置
 
   // add your middleware config here
   config.middleware = [];
