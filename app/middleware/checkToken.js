@@ -6,7 +6,7 @@ checkToken = () => {
       // 2.Verify token
       console.log(ctx.app.jwt.verify(token, ctx.app.config.jwt.secret));
       let decode = ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
-      if(decode.name && decode.password) {
+      if(decode.data.name && decode.data.password) {
         await next();
       } else {
         ctx.body = {
@@ -16,7 +16,7 @@ checkToken = () => {
       }
     } catch (e) {
       ctx.body = {
-        msg: 'Server error',
+        msg: e,
         status: 501
       }
     }

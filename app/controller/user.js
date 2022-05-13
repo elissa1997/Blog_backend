@@ -52,7 +52,7 @@ class UserController extends Controller {
           password: post_data.password
          };
         // 2.1.Generate token with your user-info & your secret
-        let token =  app.jwt.sign(user_jwt, this.app.config.jwt.secret);
+        let token =  app.jwt.sign({ data: user_jwt }, this.app.config.jwt.secret, { expiresIn: '12h' });
         ctx.body = {
           msg: 'Login successfully.',
           token: token,
