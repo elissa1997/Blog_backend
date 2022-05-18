@@ -33,7 +33,7 @@ class ArticleService extends Service {
       articleList = {count, rows};
       return articleList;
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       return null;
     }
     // console.log("getAll");
