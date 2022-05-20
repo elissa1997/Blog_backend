@@ -3,6 +3,17 @@ const Service = require('egg').Service;
 class ArticleService extends Service {
   async getArticleAll(filter,page) {
     let { app } = this;
+    let searchSql = '';
+    if (filter) {
+      let temp = [];
+      filter = JSON.parse(filter);
+      (filter.title)? temp.push(`title LIKE '%${filter.title}%'`): undefined;
+      (filter.category)? temp.push(`category = '${filter.category}'`): undefined;
+      (filter.status)? temp.push(`status = '${filter.status}'`): undefined;
+
+      searchSql = 'WHERE '+temp.join(' AND ');
+    }
+    // console.log(searchSql);
     const sql = `
     SELECT
       articles.*, 
@@ -13,6 +24,7 @@ class ArticleService extends Service {
       comments
       ON 
         articles.id = comments.a_id
+    ${searchSql}
     GROUP BY
       articles.id
     ORDER BY
@@ -28,7 +40,7 @@ class ArticleService extends Service {
         logging: false, // 是否将 SQL 语句打印到控制台
       })
 
-      let count = await app.model.Article.count();
+      let count = (filter) ? rows.length : await app.model.Article.count();
 
       articleList = {count, rows};
       return articleList;

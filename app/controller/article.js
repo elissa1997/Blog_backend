@@ -10,7 +10,7 @@ class ArticleController extends Controller {
     const { ctx } = this;
     try {
       let get_data = ctx.query;
-      let filter = {};
+      let filter = get_data.search;
       // console.log(get_data);
       let page = { 
         offset: Number(get_data.offset), 
@@ -31,6 +31,7 @@ class ArticleController extends Controller {
       }
       // console.log(res);
     } catch (e) {
+      console.log(e);
       ctx.body = {
         msg: 'Server error',
         status: 501
