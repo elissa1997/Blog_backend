@@ -16,7 +16,7 @@ checkToken = () => {
       }
     } catch (e) {
       ctx.body = {
-        msg: e,
+        msg: 'Jwt verification failed',
         status: 501
       }
     }
