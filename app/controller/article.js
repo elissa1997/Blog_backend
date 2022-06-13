@@ -67,6 +67,32 @@ class ArticleController extends Controller {
     }
   }
 
+  // 文章添加
+  async addArticle() {
+    const { ctx } = this;
+    try {
+      let post_data = ctx.request.body;
+      let res = await ctx.service.article.addArticle(post_data);
+      if (res) {
+        ctx.body = {
+          msg: 'Add successfully',
+          data: res,
+          status: 200
+        }
+      }else {
+        ctx.body = {
+          msg: 'Add failed',
+          status: 402
+        }
+      }
+    } catch (e) {
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
+    }
+  }
+
 
 
 }

@@ -76,6 +76,25 @@ class ArticleService extends Service {
       return null;
     }
   }
+
+  async addArticle(data) {
+    let { app } = this;
+    let { title, cover, content, category, status, author } = data;
+    try {
+      await app.model.Article.create({
+        title,
+        cover,
+        content,
+        category,
+        status,
+        author
+      });
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
+    }
+  }
 }
 
 module.exports = ArticleService;
