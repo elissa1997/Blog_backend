@@ -93,6 +93,50 @@ class ArticleController extends Controller {
     }
   }
 
+  // 文章删除
+
+  async delArticle() {
+    const { ctx } = this;
+    try {
+      let post_data = ctx.request.body;
+      let res = await ctx.service.article.delArticle(post_data);
+      if (res) {
+        ctx.body = {
+          msg: 'Del successfully',
+          data: res,
+          status: 200
+        }
+      }else {
+        ctx.body = {
+          msg: 'Del failed',
+          status: 402
+        }
+      }
+    } catch (e) {
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
+    }
+  }
+
+
+  async getArticleAllLeftJoin() {
+    const { ctx } = this;
+    let get_data = ctx.query;
+    let filter = get_data.search;
+    // console.log(get_data);
+    let page = { 
+      offset: Number(get_data.offset), 
+      limits: Number(get_data.limits) 
+    };
+    let res = await ctx.service.article.getArticleAllLeftJoin(filter,page);
+    ctx.body = {
+      msg: 'test',
+      data: res,
+      status: 200
+    }
+  }
 
 
 }

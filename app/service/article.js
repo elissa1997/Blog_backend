@@ -1,54 +1,35 @@
 const Service = require('egg').Service;
+const { Op } = require("sequelize");
 
 class ArticleService extends Service {
   async getArticleAll(filter,page) {
     let { app } = this;
-    let searchSql = '';
+    let where = {}
     if (filter) {
-      let temp = [];
       filter = JSON.parse(filter);
-      (filter.title)? temp.push(`title LIKE '%${filter.title}%'`): undefined;
-      (filter.category)? temp.push(`category = '${filter.category}'`): undefined;
-      (filter.status)? temp.push(`status = '${filter.status}'`): undefined;
-
-      searchSql = 'WHERE '+temp.join(' AND ');
+      
+      (filter.title === undefined)? null : where["title"] = { [Op.like]: filter.title };
+      (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
+      (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
-    // console.log(searchSql);
-    const sql = `
-    SELECT
-      articles.*, 
-      COUNT(comments.id) as commentsNum
-    FROM
-      articles
-      LEFT JOIN
-      comments
-      ON 
-        articles.id = comments.a_id
-    ${searchSql}
-    GROUP BY
-      articles.id
-    ORDER BY
-      articles.created_at DESC
-    LIMIT ${(page.offset-1)*page.limits}, ${page.limits}
-    `
-
-    let articleList;
+    console.log(where);
     try {
-      let rows = await app.model.query(sql, {
-        type: 'SELECT', // 查询方式
-        raw: false, // 是否使用数组组装的方式展示结果
-        logging: false, // 是否将 SQL 语句打印到控制台
+      let articleList = await app.model.Article.findAll({
+        where: where,
+        include: {
+          model: app.model.Comment
+        },
+        offset: (page.offset-1)*page.limits,
+        limit: page.limits,
+        order: [
+          ['created_at', 'DESC'],
+        ]
       })
-
-      let count = (filter) ? rows.length : await app.model.Article.count();
-
-      articleList = {count, rows};
       return articleList;
     } catch (e) {
       console.log(e);
       return null;
     }
-    // console.log("getAll");
   }
 
   async getArticleSingle(id) {
@@ -93,6 +74,46 @@ class ArticleService extends Service {
     } catch (e) {
       console.log(e)
       return false;
+    }
+  }
+
+  async delArticle(data) {
+    let { app } = this;
+    if (typeof(data.id) === "object") {
+      console.log("数组"+data.id);
+    }else if (typeof(data.id) === "number"){
+      console.log("数字"+data.id);
+    }
+  }
+
+  // 关联查询测试
+  async getArticleAllLeftJoin(filter,page) {
+    let { app } = this;
+    let where = {}
+    if (filter) {
+      filter = JSON.parse(filter);
+      
+      (filter.title === undefined)? null : where["title"] = { [Op.like]: filter.title };
+      (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
+      (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
+    }
+    console.log(where);
+    try {
+      let articleList = await app.model.Article.findAll({
+        where: where,
+        include: {
+          model: app.model.Comment
+        },
+        offset: (page.offset-1)*page.limits,
+        limit: page.limits,
+        order: [
+          ['created_at', 'DESC'],
+        ]
+      })
+      return articleList;
+    } catch (e) {
+      console.log(e);
+      return null;
     }
   }
 }
