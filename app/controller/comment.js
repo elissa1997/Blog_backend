@@ -3,13 +3,19 @@
 const Controller = require('egg').Controller;
 
 class CommentController extends Controller {
-  async getListByArticle() {
-    const { ctx } = this;
+
+  // 获取评论列表
+  async getList() {
     try {
+      const { ctx } = this;
       let get_data = ctx.query;
-      let filter = {};
-      let a_id = get_data.a_id;
-      let res = await ctx.service.comment.getCommentByArticle(a_id)
+      let filter = get_data.search;
+      // console.log(get_data);
+      let page = { 
+        offset: Number(get_data.offset), 
+        limits: Number(get_data.limits) 
+      };
+      let res = await ctx.service.comment.getCommentAllwithArticle(filter,page);
       if (res) {
         ctx.body = {
           msg: 'Query successfully',
@@ -22,8 +28,8 @@ class CommentController extends Controller {
           status: 402
         }
       }
-    }catch (e) {
-      // console.log(e);
+    } catch (e) {
+      console.log(e);
       ctx.body = {
         msg: 'Server error',
         status: 501
@@ -31,6 +37,7 @@ class CommentController extends Controller {
     }
   }
 
+  // 添加评论
   async addComment() {
     const { ctx } = this;
     try {

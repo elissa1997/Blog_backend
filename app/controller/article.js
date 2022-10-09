@@ -7,6 +7,7 @@ class ArticleController extends Controller {
   // 文章列表
 
   async getList() {
+
     const { ctx } = this;
     try {
       let get_data = ctx.query;
@@ -16,7 +17,7 @@ class ArticleController extends Controller {
         offset: Number(get_data.offset), 
         limits: Number(get_data.limits) 
       };
-      let res = await ctx.service.article.getArticleAll(filter,page)
+      let res = await ctx.service.article.getArticleAllwithComment(filter,page);
       if (res) {
         ctx.body = {
           msg: 'Query successfully',
@@ -29,7 +30,6 @@ class ArticleController extends Controller {
           status: 402
         }
       }
-      // console.log(res);
     } catch (e) {
       console.log(e);
       ctx.body = {
@@ -46,7 +46,7 @@ class ArticleController extends Controller {
     try {
       let get_data = ctx.query;
       let id = get_data.a_id;
-      let res = await ctx.service.article.getArticleSingle(id);
+      let res = await ctx.service.article.getArticleSinglewithComment(id);
       if (res) {
         ctx.body = {
           msg: 'Query successfully',
@@ -119,25 +119,6 @@ class ArticleController extends Controller {
       }
     }
   }
-
-
-  async getArticleAllLeftJoin() {
-    const { ctx } = this;
-    let get_data = ctx.query;
-    let filter = get_data.search;
-    // console.log(get_data);
-    let page = { 
-      offset: Number(get_data.offset), 
-      limits: Number(get_data.limits) 
-    };
-    let res = await ctx.service.article.getArticleAllLeftJoin(filter,page);
-    ctx.body = {
-      msg: 'test',
-      data: res,
-      status: 200
-    }
-  }
-
 
 }
 

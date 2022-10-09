@@ -2,25 +2,32 @@ const Service = require('egg').Service;
 
 class CommentService extends Service {
 
-  async getCommentByArticle(a_id) {
+  async getCommentAllwithArticle(filter,page) {
     let { app } = this;
-    let CommentByArticle;
+    let where = {}
+    if (filter) {
+      filter = JSON.parse(filter);
+      
+      (filter.title === undefined)? null : where["title"] = { [Op.like]: filter.title };
+      (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
+      (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
+    }
+    console.log(where);
     try {
-      let {count, rows} = await app.model.Comment.findAndCountAll({
-        where: {
-          a_id: a_id
+      let commentList = await app.model.Comment.findAll({
+        where: where,
+        include: {
+          model: app.model.Article
         },
+        offset: (page.offset-1)*page.limits,
+        limit: page.limits,
         order: [
-          ['parent_id', 'ASC'],
-          ['created_at', 'DESC']
+          ['created_at', 'DESC'],
         ]
       })
-
-      CommentByArticle = {count, rows};
-      return CommentByArticle;
-      
+      return commentList;
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return null;
     }
   }
