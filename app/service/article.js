@@ -15,7 +15,7 @@ class ArticleService extends Service {
     }
     console.log(where);
     try {
-      let articleList = await app.model.Article.findAll({
+      let { count, rows } = await app.model.Article.findAndCountAll({
         where: where,
         include: {
           model: app.model.Comment
@@ -26,7 +26,7 @@ class ArticleService extends Service {
           ['created_at', 'DESC'],
         ]
       })
-      return articleList;
+      return { count, rows };
     } catch (e) {
       console.log(e);
       return null;
