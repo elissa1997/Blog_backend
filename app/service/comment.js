@@ -1,4 +1,5 @@
 const Service = require('egg').Service;
+const { Op } = require("sequelize");
 
 class CommentService extends Service {
 
@@ -8,9 +9,9 @@ class CommentService extends Service {
     if (filter) {
       filter = JSON.parse(filter);
       
-      (filter.title === undefined)? null : where["title"] = { [Op.like]: filter.title };
-      (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
-      (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
+      (filter.text === undefined)? null : where["text"] = { [Op.like]: filter.text };
+      (filter.aId === undefined)? null : where["aId"] = { [Op.eq]: filter.aId };
+      // (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
     console.log(where);
     try {
