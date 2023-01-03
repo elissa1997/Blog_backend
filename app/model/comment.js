@@ -14,8 +14,9 @@ module.exports = app => {
     email: STRING,     // 邮箱
     url: STRING,       // 网址
     ip: STRING,        // ip
+    status: INTEGER,   // 状态
     agent: STRING,     // 用户代理
-    text: TEXT,        // 评论内容
+    text: STRING,      // 评论内容
   })
 
   Comment.associate = function (){

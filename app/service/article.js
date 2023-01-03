@@ -9,7 +9,7 @@ class ArticleService extends Service {
     if (filter) {
       filter = JSON.parse(filter);
       
-      (filter.title === undefined)? null : where["title"] = { [Op.like]: filter.title };
+      (filter.title === undefined)? null : where["title"] = { [Op.like]: `%${filter.title}%` };
       (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
       (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
@@ -24,7 +24,8 @@ class ArticleService extends Service {
         limit: page.limits,
         order: [
           ['created_at', 'DESC'],
-        ]
+        ],
+        distinct: true
       })
       return { count, rows };
     } catch (e) {

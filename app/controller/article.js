@@ -6,7 +6,7 @@ class ArticleController extends Controller {
 
   // 文章列表
 
-  async getList() {
+  async listArticle() {
 
     const { ctx } = this;
     try {
@@ -41,7 +41,7 @@ class ArticleController extends Controller {
 
   // 文章详情
 
-  async getDetail() {
+  async detailArticle() {
     const { ctx } = this;
     try {
       let get_data = ctx.query;

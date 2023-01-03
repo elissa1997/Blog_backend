@@ -9,13 +9,13 @@ class CommentService extends Service {
     if (filter) {
       filter = JSON.parse(filter);
       
-      (filter.text === undefined)? null : where["text"] = { [Op.like]: filter.text };
-      (filter.aId === undefined)? null : where["aId"] = { [Op.eq]: filter.aId };
-      // (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
+      (filter.text === undefined)? null : where["text"] = { [Op.like]: `%${filter.text}%` };
+      // (filter.aId === undefined)? null : where["aId"] = { [Op.eq]: filter.aId };
+      (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
     console.log(where);
     try {
-      let commentList = await app.model.Comment.findAll({
+      let { count, rows } = await app.model.Comment.findAndCountAll({
         where: where,
         include: {
           model: app.model.Article
@@ -24,9 +24,10 @@ class CommentService extends Service {
         limit: page.limits,
         order: [
           ['created_at', 'DESC'],
-        ]
+        ],
+        distinct: true
       })
-      return commentList;
+      return { count, rows };
     } catch (e) {
       console.log(e);
       return null;
@@ -49,6 +50,48 @@ class CommentService extends Service {
         agent,
         text
       });
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
+    }
+  }
+
+  async deleteComment(data) {
+    let { app } = this;
+    let { id } = data;
+    let where = {};
+    if (typeof(id) === "number") {
+      where["id"] = { [Op.eq]: id };
+    }
+    if (typeof(id) === "object") {
+      where["id"] = { [Op.in]: id };
+    }
+    try {
+      await app.model.Comment.destroy({
+        where: where
+      });
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
+    }
+  }
+
+  async updateComment(data) {
+    let { app } = this;
+    let { updateData, id } = data;
+    let where = {
+      id: { [Op.eq]: id }
+    };
+
+    try {
+      await app.model.Comment.update(
+        updateData,
+        {
+          where: where
+        }
+      )
       return true;
     } catch (e) {
       console.log(e)
