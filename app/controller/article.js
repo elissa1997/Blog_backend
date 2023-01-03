@@ -95,20 +95,20 @@ class ArticleController extends Controller {
 
   // 文章删除
 
-  async delArticle() {
+  async deleteArticle() {
     const { ctx } = this;
     try {
-      let post_data = ctx.request.body;
-      let res = await ctx.service.article.delArticle(post_data);
+      let delete_data = ctx.request.body;
+      let res = await ctx.service.article.deleteArticle(delete_data);
       if (res) {
         ctx.body = {
-          msg: 'Del successfully',
+          msg: 'Delete successfully',
           data: res,
           status: 200
         }
       }else {
         ctx.body = {
-          msg: 'Del failed',
+          msg: 'Delete failed',
           status: 402
         }
       }
@@ -120,6 +120,32 @@ class ArticleController extends Controller {
     }
   }
 
+
+  async updateArticle() {
+    const { ctx } = this;
+    try {
+      let update_data = ctx.request.body;
+      let res = await ctx.service.article.updateArticle(update_data);
+      if (res) {
+        ctx.body = {
+          msg: 'Update successfully',
+          data: res,
+          status: 200
+        }
+      }else {
+        ctx.body = {
+          msg: 'Update failed',
+          status: 402
+        }
+      }
+    }catch (e) {
+      // console.log(e);
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
+    }
+  }
 }
 
 module.exports = ArticleController;

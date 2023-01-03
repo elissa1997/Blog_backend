@@ -73,12 +73,45 @@ class ArticleService extends Service {
     }
   }
 
-  async delArticle(data) {
+  async deleteArticle(data) {
     let { app } = this;
-    if (typeof(data.id) === "object") {
-      console.log("数组"+data.id);
-    }else if (typeof(data.id) === "number"){
-      console.log("数字"+data.id);
+    let { id } = data;
+    let where = {};
+    if (typeof(id) === "number") {
+      where["id"] = { [Op.eq]: id };
+    }
+    if (typeof(id) === "object") {
+      where["id"] = { [Op.in]: id };
+    }
+    try {
+      await app.model.Article.destroy({
+        where: where
+      });
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
+    }
+  }
+
+  async updateArticle(data) {
+    let { app } = this;
+    let { updateData, id } = data;
+    let where = {
+      id: { [Op.eq]: id }
+    };
+
+    try {
+      await app.model.Article.update(
+        updateData,
+        {
+          where: where
+        }
+      )
+      return true;
+    } catch (e) {
+      console.log(e)
+      return false;
     }
   }
 }

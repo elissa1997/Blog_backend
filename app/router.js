@@ -14,7 +14,8 @@ module.exports = app => {
   router.get('/article/list', controller.article.listArticle);
   router.get('/article/detail', controller.article.detailArticle);
   router.post('/article/add', app.middleware.checkToken(), controller.article.addArticle);
-  router.post('/article/del', app.middleware.checkToken(), controller.article.delArticle);
+  router.post('/article/update', app.middleware.checkToken(), controller.article.updateArticle);
+  router.post('/article/del', app.middleware.checkToken(), controller.article.deleteArticle);
   
   router.get('/comment/list', controller.comment.listComment);
   router.post('/comment/add', controller.comment.addComment);
