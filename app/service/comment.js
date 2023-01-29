@@ -10,7 +10,7 @@ class CommentService extends Service {
       filter = JSON.parse(filter);
       
       (filter.text === undefined)? null : where["text"] = { [Op.like]: `%${filter.text}%` };
-      // (filter.aId === undefined)? null : where["aId"] = { [Op.eq]: filter.aId };
+      (filter.aId === undefined)? null : where["aId"] = { [Op.eq]: filter.aId };
       (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
     console.log(where);
@@ -20,8 +20,8 @@ class CommentService extends Service {
         include: {
           model: app.model.Article
         },
-        offset: (page.offset-1)*page.limits,
-        limit: page.limits,
+        offset: page?(page.offset-1)*page.limits:null,
+        limit: page?page.limits:null,
         order: [
           ['created_at', 'DESC'],
         ],

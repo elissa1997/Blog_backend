@@ -11,10 +11,13 @@ class CommentController extends Controller {
       let get_data = ctx.query;
       let filter = get_data.search;
       // console.log(filter);
-      let page = { 
-        offset: Number(get_data.offset), 
-        limits: Number(get_data.limits) 
-      };
+      let page = undefined;
+      if(get_data.offset && get_data.limits) {
+        page = { 
+          offset: Number(get_data.offset), 
+          limits: Number(get_data.limits) 
+        };
+      }
       let res = await ctx.service.comment.getCommentAllwithArticle(filter,page);
       if (res) {
         ctx.body = {
