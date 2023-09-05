@@ -65,9 +65,45 @@ class UserController extends Controller {
         };
       }
     } catch (e) {
-      
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
     }
   }
+
+  // 获取当前登录用户信息
+  async getUserInfo() {
+    let { app,ctx } = this;
+    try {
+      // 1.Get token
+      let token = ctx.request.header.token;
+      // 2.Verify token
+      let username = app.jwt.verify(token, app.config.jwt.secret).data.name;
+      // 3.Get user info by user-id
+      // console.log((await ctx.service.user.getUserByField(username, "name"))[0].dataValues);
+      let userInfo = (await ctx.service.user.getUserByField(username, "name"))[0].dataValues;
+      if (userInfo) {
+        delete userInfo.password;
+        ctx.body = {
+          msg: 'Get user info successfully.',
+          userInfo: userInfo,
+          status: 200 
+        }
+      }else{
+        ctx.body = {
+          msg: 'Get user info failed.',
+          status: 401 
+        }
+      }
+    }catch (e) {
+      ctx.body = {
+        msg: 'Server error',
+        status: 501
+      }
+    }
+  }
+
 }
 
 module.exports = UserController;

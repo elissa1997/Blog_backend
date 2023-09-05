@@ -10,6 +10,7 @@ module.exports = app => {
 
   router.post('/register', controller.user.register);
   router.post('/login', controller.user.login);
+  router.post('/user/info', app.middleware.checkToken(), controller.user.getUserInfo);
 
   router.get('/article/list', controller.article.listArticle);
   router.get('/article/detail', controller.article.detailArticle);
