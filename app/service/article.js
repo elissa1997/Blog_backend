@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 class ArticleService extends Service {
   
   async getArticleAllwithComment(filter,page) {
-    let { app } = this;
+    let { app, ctx } = this;
     let where = {}
     if (filter) {
       filter = JSON.parse(filter);
