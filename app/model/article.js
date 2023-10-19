@@ -11,8 +11,8 @@
      cover: STRING,           // 封面url
      content: TEXT('long'),   // 内容
      category: INTEGER,       // 分类
-     status: INTEGER,         // 状态
-     author: INTEGER,         // 作者
+     status: INTEGER          // 状态
+
    })
 
    Article.associate = function (){
