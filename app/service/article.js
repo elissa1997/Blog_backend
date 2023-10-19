@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 class ArticleService extends Service {
   
   async getArticleAllwithComment(filter,page) {
-    let { app } = this;
+    let { app, ctx } = this;
     let where = {}
     if (filter) {
       filter = JSON.parse(filter);
@@ -13,7 +13,7 @@ class ArticleService extends Service {
       (filter.category === undefined)? null : where["category"] = { [Op.eq]: filter.category };
       (filter.status === undefined)? null : where["status"] = { [Op.eq]: filter.status };
     }
-    console.log(where);
+    // console.log(where);
     try {
       let { count, rows } = await app.model.Article.findAndCountAll({
         where: where,
@@ -45,7 +45,7 @@ class ArticleService extends Service {
           model: app.model.Comment
         },
       })
-      console.log(articleSingle);
+      // console.log(articleSingle);
       return articleSingle;
       
     } catch (e) {
